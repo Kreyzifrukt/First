@@ -8,4 +8,5 @@ public sealed class TaskItem
     public DateTime CreatedAt { get; init; } = DateTime.UtcNow;
     public bool IsCompleted { get; set; }
     public DateTime? CompletedAt { get; set; }
+    public Guid? CategoryId { get; set; }
 }
