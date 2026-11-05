@@ -45,6 +45,8 @@ TaskTracker/
 .github/
 ├── ISSUE_TEMPLATE/
 │   └── ai-task.md
+├── workflows/
+│   └── dotnet-ci.yml
 └── PULL_REQUEST_TEMPLATE.md
 
 PROTOCOL.md
@@ -52,6 +54,10 @@ ARCHITECTURE.md
 TASKS.md
 REVIEW.md
 ```
+
+## Continuous integration
+
+GitHub Actions runs a .NET 10 Release build for pull requests targeting `main` and pushes to `main`. The workflow restores dependencies and builds the application. It does not run automated tests yet because the repository currently has no test project.
 
 ## AI-assisted development
 

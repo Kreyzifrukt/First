@@ -36,6 +36,7 @@ Claude (implementation) ----> feature branch ----> Pull Request
 - `REVIEW.md`: review checklist and review log conventions.
 - `.github/ISSUE_TEMPLATE/ai-task.md`: structured task intake.
 - `.github/PULL_REQUEST_TEMPLATE.md`: implementation handoff format.
+- `.github/workflows/dotnet-ci.yml`: automated .NET 10 Release build for pull requests targeting `main` and pushes to `main`.
 
 ## Integration boundaries
 
@@ -45,11 +46,17 @@ For Claude to implement changes, use Claude Code with the repository checked out
 
 This setup provides a human-supervised workflow, not a continuously running autonomous process. Agents act when invoked by the user or by separately configured automation. No background polling or agent-to-agent messaging is enabled by these documentation files alone.
 
+## Continuous integration
+
+The GitHub Actions workflow restores and builds `TaskTracker/TaskTracker.csproj` using the .NET 10 SDK in Release configuration. The repository does not currently contain a test project, so this workflow reports build status only; add a test project and a test step when automated tests exist.
+
+The workflow requests only read access to repository contents. It does not receive secrets or write permissions.
+
 ## Permissions and branch protection
 
 Recommended GitHub settings:
 - Protect `main`; require pull requests before merging.
-- Require CI checks to pass before merge.
+- Require the **Build (.NET 10)** status check to pass before merging, after the workflow has run at least once and GitHub exposes the check.
 - Require at least one human approval where the GitHub plan/settings support it.
 - Disable force pushes and branch deletion on `main`.
 - Give agents the minimum permissions needed to work on branches and PRs. Do not grant administration or bypass permissions.
