@@ -1,14 +1,17 @@
 # TaskTracker
 
-A simple console-based task manager built with C# and .NET 10.
+A console-based task manager built with C# and .NET 10.
 
 ## Features
 
 - Add tasks with a title and optional description
 - View all tasks and their completion status
-- Mark tasks as completed
-- Delete tasks
-- Persist tasks locally in a JSON file
+- Mark tasks as completed and delete tasks
+- Create categories with unique names (case-insensitive)
+- Assign or remove a category from a task
+- Filter tasks by category
+- Prevent deletion of categories that are still assigned to tasks
+- Persist tasks and categories locally as JSON
 
 ## Requirements
 
@@ -19,54 +22,41 @@ A simple console-based task manager built with C# and .NET 10.
 From the repository root:
 
 ```bash
-cd TaskTracker
-dotnet run
+dotnet run --project TaskTracker/TaskTracker.csproj
 ```
 
-Tasks are stored in `tasks.json` in the application's working directory.
+Tasks are stored in `tasks.json` and categories in `categories.json`, both in the application's working directory. Existing task JSON files remain compatible because category assignment is an optional property.
+
+## Test
+
+```bash
+dotnet test TaskTracker.Tests/TaskTracker.Tests.csproj --configuration Release
+```
 
 ## Project structure
 
 ```text
 TaskTracker/
 ├── Models/
-│   └── TaskItem.cs
+│   ├── TaskItem.cs
+│   └── TaskCategory.cs
 ├── Services/
 │   └── TaskService.cs
 ├── Storage/
-│   └── JsonTaskRepository.cs
+│   ├── JsonTaskRepository.cs
+│   └── JsonCategoryRepository.cs
 ├── Program.cs
 └── TaskTracker.csproj
 
-.ai/
-├── CLAUDE.md
-└── CHATGPT.md
-
-.github/
-├── ISSUE_TEMPLATE/
-│   └── ai-task.md
-├── workflows/
-│   └── dotnet-ci.yml
-└── PULL_REQUEST_TEMPLATE.md
-
-PROTOCOL.md
-ARCHITECTURE.md
-TASKS.md
-REVIEW.md
+TaskTracker.Tests/
+├── CategoryServiceTests.cs
+└── TaskTracker.Tests.csproj
 ```
 
 ## Continuous integration
 
-GitHub Actions runs a .NET 10 Release build for pull requests targeting `main` and pushes to `main`. The workflow restores dependencies and builds the application. It does not run automated tests yet because the repository currently has no test project.
+GitHub Actions restores the test project, runs the test suite, and builds the application using the .NET 10 SDK in Release configuration.
 
 ## AI-assisted development
 
-This repository includes a human-supervised collaboration workflow for Claude (implementation) and ChatGPT (technical lead/reviewer).
-
-- Read [PROTOCOL.md](PROTOCOL.md) before starting AI-assisted work.
-- See [ARCHITECTURE.md](ARCHITECTURE.md) for roles, integration boundaries, and recommended GitHub protections.
-- Use the [AI Task issue template](.github/ISSUE_TEMPLATE/ai-task.md) to define scoped work.
-- Use [REVIEW.md](REVIEW.md) as the review checklist.
-- Agent-specific instructions are in `.ai/CLAUDE.md` and `.ai/CHATGPT.md`.
-
-All changes go through a branch and pull request. AI review is advisory; only the human owner decides whether to merge. This repository setup does not create background agents or grant Claude GitHub write access by itself. Claude needs a separately authenticated write-capable runtime, such as Claude Code, to push branches and open pull requests.
+This repository uses a human-supervised Claude and ChatGPT workflow. See [PROTOCOL.md](PROTOCOL.md), [ARCHITECTURE.md](ARCHITECTURE.md), and [REVIEW.md](REVIEW.md). All changes remain in feature branches and pull requests until the human owner decides whether to merge.
